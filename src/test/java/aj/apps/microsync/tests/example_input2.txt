@@ -1,0 +1,380 @@
+<!-- one.upload https://u1.linnk.it/qc8sbw/usr/apps/ajMicroSync/docs/app-apps -->
+<!DOCTYPE html>
+<html>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css'>
+<link
+	href="http://appjangle.com/assets/v02/bootstrap-2.1.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="http://appjangle.com/assets/v02/bootstrap-2.1.0/css/bootstrap-responsive.min.css"
+	rel="stylesheet">
+
+<!-- <link href="http://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/appjangle-green-css-0.0.3.value.css" rel="stylesheet"> -->
+
+<style>
+body {
+	background-image:
+		url(http://appjangle.com/assets/v02/img/appjangle_background_pattern1.png);
+	/* created with http://bgpatterns.com/ */
+	background-repeat: repeat;
+	background-color: rgb(56, 118, 29);
+	background-repeat: repeat;
+}
+
+.roundCorners {
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+</style>
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-34013716-1' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+</head>
+
+<body>
+
+	<div class="container-fluid">
+
+		<div class="row-fluid" style="text-align: center;">
+
+			<div class="span12" style="margin-top: 10px;">
+				<img alt="Appjangle"
+					style="width: 100%; height: auto; max-width: 150px; width: 150px;"
+					src="http://appjangle.com/assets/v02/img/appjangle_logo_white_bevel.png">
+				<img alt="The platform for smarter apps."
+					style="margin-left: 20px; max-width: 300px; width: 300px;"
+					src="http://appjangle.com/assets/v02/img/the_platform_for_smarter_apps.png">
+
+				<div id="login" class="pull-right">
+					<div class="appjangle-login" style="width: 230px;">
+						<div class="wait"
+							style="margin-top: 20px; margin-right: 90px;">
+							<img
+								src="http://dl.dropbox.com/u/957046/static/assets/1210/ajax-loader-arrows-white.gif">
+						</div>
+
+						<div class="signedin hide"
+							style="margin-top: 12px; margin-right: 40px;">
+							<ul class="nav nav-pills">
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#" style="color: white;"> <i
+										class="icon-user icon-white"></i> <span
+										class="appjangle-useremail">mxrogm@gmail.com</span> <b
+										class="caret"
+										style="border-top-color: white; border-bottom-color: white;"></b>
+								</a>
+									<ul class="dropdown-menu">
+										<li><a href="#" class="signout-button">Sign out</a></li>
+										<li class="divider"></li>
+										<li><a href="#" class="settings-button">Settings</a></li>
+									</ul></li>
+							</ul>
+						</div>
+
+						<div class="signin hide">
+							<p class=""
+								style="color: white; margin-top: 20px; margin-right: 40px;">
+
+								<a href="http://appjangle.com/signup" style="color: white;"><img
+									style="height: 24px; width: auto;"
+									src="http://docs.google.com/drawings/pub?id=1ihqO-ZFegZHlSWGP8epeArFBVOJxcE3PcubdTC78EEo&w=80">oin</a>
+
+								<a href="#" rel="tooltip" data-placement="bottom"
+									data-original-title="Free and safe!" data-trigger="hover"
+									class="appjangle-simley"> <img alt="Appjangle is free!"
+									rel="tooltip" style="width: 23px; height: auto;"
+									src="http://docs.google.com/drawings/pub?id=1Mgw6qm_i_ZRzxDUSW8xGsvzny5Oy6Cjivy9Jyld_yYY&w=100&h=100"></a>
+
+								<a class="signin-button" href="#"
+									style="margin-left: 5px; color: white;"><img
+									style="height: 24px; width: auto;"
+									src="http://docs.google.com/drawings/pub?id=1BbQR2SlN0KlZq5rdtTuaDRT2zjS8ie5MYksVa4bZYKI&w=80">ign
+									in</a>
+							</p>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<!-- <div class="span4"></div> -->
+		</div>
+
+
+
+		<div class="hide row-fluid" id="loginDialog">
+			<div class="span12">
+				<div class="modal hide fade">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h3>Sign In</h3>
+					</div>
+					<div class="modal-body">
+						<p>
+							Sign in with your email address and password. If you have no
+							account yet,<a href="http://appjangle.com/signup"> join
+								Appjangle for free</a>.
+						</p>
+
+						<div class="alert hide alert-error">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							<span class="alertText"></span>
+						</div>
+
+
+						<form class="form-horizontal"
+							style="margin-top: 50px; margin-bottom: 50px;">
+							<div class="control-group">
+								<label class="control-label" for="inputEmail">Email</label>
+								<div class="controls">
+									<input class="appjangle-useremail-input search-query input-large" type="text"
+										id="inputEmail" placeholder="Email">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputPassword">Password</label>
+								<div class="controls">
+									<input class="appjangle-userpassword-input search-query input-large" type="password"
+										id="inputPassword" placeholder="Password">
+								</div>
+							</div>
+							
+						</form>
+
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="appjangle-sign-in-cancel-button btn">Cancel</a>
+						<a href="#" class="appjangle-sign-in-button btn btn-success">Sign In</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid roundCorners"
+			style="margin-top: 30px; background-color: white; background-image: url(http://dl.dropbox.com/u/957046/static/assets/1210/background%20white.png)">
+			<div class="span12"
+				style="padding: 40px; font-size: 120%; font-family: 'Open Sans', sans-serif;">
+				<!-- one.download https://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/aj-notification-html-0.0.3 -->
+				
+				<!-- one.end -->
+				
+				
+				<div class="row-fluid">
+					<div class="span6">
+						<p>
+							Appjangle apps are built to support <b>one task well.</b>
+						</p>
+						<p>
+							Apps manage their data in a open web format and sharing data
+							between Appjangle apps (and any other app) is as easy as <b>sharing
+								a link</b>.
+						</p>
+						<p>
+							You can browse, share and edit all your data regardless of which
+							app you have used to create it. This empowers you to use the data
+							in any existing or yet to be created app. Ultimately, making <b>your
+								data more valuable to you</b>.
+						</p>
+					</div>
+					<div class=" span6">
+						<div class="row-fluid">
+							<div class="span4">
+								<a style="font-size: 140%;"
+									class="btn btn-link btn-large btn-block"
+									href="http://appjangle.com/signup">Register</a>
+							</div>
+							<div class="span8">
+								<p>Sign up for a free account to store your documents and
+									settings.</p>
+							</div>
+
+						</div>
+
+						<div class="row-fluid" style="margin-top: 15px;">
+							<div class="span4">
+								<a style="font-size: 140%;"
+									class="appsSigninButton btn btn-link btn-large btn-block"
+									>Sign In</a>
+							</div>
+							<div class="span8">
+								<p>Sign in using your E-Mail address and password if you've
+									already signed up.</p>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+
+				<div class="row-fluid">
+					<div class="span12">
+						<div class="page-header">
+							<h1>
+								Featured Apps <small></small>
+							</h1>
+						</div>
+					</div>
+				</div>
+
+				<div class="row-fluid">
+					<div class="span12">
+						<p>Most apps below can be used without signing up for
+							Appjangle.</p>
+						<table class="table table-bordered table-hover">
+							<tr>
+								<td style="width: 140px;">Nodejump</td>
+								<td style="width: 260px;"><img class=""
+									style="width: 250px;"
+									src="http://dl.dropbox.com/u/957046/static/assets/1210/nodejump-screenshot1.PNG"></td>
+
+								<td>Track your personal and team notes using multiple
+									connected Markdown documents. Also allows to publish notes as
+									web pages.</td>
+								<td><a class="btn btn-link"
+									href="http://nodejump.com/snapshot">Create New Document</a></td>
+							</tr>
+							<tr>
+								<td>Console</td>
+								<td style="width: 260px;"><img class=""
+									style="width: 250px;"
+									src="http://dl.dropbox.com/u/957046/static/assets/1210/console-snapshot1.PNG"></td>
+
+								<td>Write and execute scripts using the Nextweb API for
+									JavaScript. Maybe one of the fastest ways to write an
+									application that will publish a web page.</td>
+								<td><a class="btn btn-link"
+									href="http://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/aj-console.value.html">Launch
+										Console</a></td>
+							</tr>
+							<tr>
+								<td>TextSync</td>
+								<td style="width: 260px;"><img class=""
+									style="width: 250px;"
+									src="http://docs.google.com/drawings/pub?id=1swhxZDTRdeRilRhIUkpBqLR_q-Hx4ur9SLsdXXCOuCQ&w=600"></td>
+
+								<td>Build modular web pages hosted on the Appjangle
+									platform. Also useful as additional tool along traditional
+									source code management systems.</td>
+								<td><a class="btn btn-link">Download</a></td>
+							</tr>
+
+							<tr>
+								<td><a
+									href="http://appjangle.blogspot.com/2012/09/new-app-web-time-reporter.html">Web
+										Time Reporter</a></td>
+								<td style="width: 260px;"><img class=""
+									style="width: 250px;"
+									src="http://dl.dropbox.com/u/957046/static/assets/1210/web-time-reporter1.PNG"></td>
+
+								<td>Track time and work units. Stores all tracked time in
+									open and easily accessible data formats.</td>
+								<td><a class="btn btn-link">Download</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+
+		<div class="row-fluid" style="text-align: center; margin-top: 30px;">
+			<div class="span12">
+				<img
+					src="http://dl.dropbox.com/u/957046/static/assets/1210/white_line_1.png">
+			</div>
+		</div>
+
+		<div class="row-fluid" style="text-align: center">
+			<div class="span12">
+				<p>
+					<small><a style="color: white" href="http://appjangle.com">powered
+							by Appjangle</a></small>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		//window.onNextwebOnedb = function(engine) {
+		//	alert(engine);
+		//};
+	</script>
+
+
+
+	<script src="http://appjangle.com/js/v01/appjangle/appjangle.nocache.js">
+	
+	</script>
+
+	<script type="text/javascript" language="javascript"
+		src="http://appjangle.com/assets/v02/headjs-0.96/head.load.min.js"></script>
+
+	<script>
+		head
+				.js(
+						"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+						"http://appjangle.com/assets/v02/bootstrap-2.1.0/js/bootstrap.min.js",
+						"http://u1.linnk.it/qc8sbw/usr/apps/ajMicroSync/docs/bootstrap-utils-js-0.0.1.value.js",
+						"http://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/utils-cookies-0.0.3.value.js",
+						"http://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/aj-core-0.0.3.value.js",
+						"http://u1.linnk.it/qc8sbw/usr/apps/textsync/docs/aj-login-js-0.0.3.value.js",
+						function() {
+
+							var loginUi = Appjangle.ui.initLoginUi({
+								loginUi : $("#login"),
+								dialog : $("#loginDialog")
+							});
+							
+							Appjangle.ui.loginUi = loginUi;
+							
+							$('.appsSigninButton').click(function(evt) {
+								evt.preventDefault();
+								if (Appjangle.user) {
+									alert("You are already signed in for Appjangle with the email: "+Appjangle.user.email());
+									
+									return;
+								}
+								
+								loginUi.showLoginDialog();
+							});
+
+						});
+	</script>
+
+
+
+
+
+</body>
+
+</html>
+
+
+
+<!-- one.end -->
