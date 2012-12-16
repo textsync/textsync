@@ -39,7 +39,7 @@ public class AppjangleDataService implements DataService {
 
         final CoreDsl dsl = client.one();
          
-        dsl.reload(dsl.reference(nodeUri)).in(client).and(new WhenLoaded() {
+        dsl.reload(dsl.reference(nodeUri)).withSecret(loginDetails.userNodeSecret()).in(client).and(new WhenLoaded() {
 
             @Override
             public void thenDo(WithLoadResult<Object> wlr) {
@@ -115,7 +115,7 @@ public class AppjangleDataService implements DataService {
             public void thenDo(OneNode syncDataNode) {
                 final CoreDsl dsl = client.one();
                
-                dsl.appendSafe(value).to(syncDataNode).atClosestAddress("./" + title).in(client).and(new WhenResponseFromServerReceived<OneValue<String>>() {
+                dsl.appendSafe(value).to(syncDataNode).atClosestAddress("./" + title).withSecret(loginDetails.userNodeSecret()).in(client).and(new WhenResponseFromServerReceived<OneValue<String>>() {
 
                     @Override
                     public void thenDo(final WithOperationResult<OneValue<String>> wor) {
@@ -168,7 +168,7 @@ public class AppjangleDataService implements DataService {
     public void downloadChanges(final String localValue, String nodeUri, final WhenChangesDownloaded callback) {
        final CoreDsl dsl = client.one();
 
-        dsl.reload(nodeUri).in(client).and(new WhenLoaded() {
+        dsl.reload(nodeUri).withSecret(loginDetails.userNodeSecret()).in(client).and(new WhenLoaded() {
 
             @Override
             public void thenDo(WithLoadResult<Object> wlr) {
@@ -222,6 +222,8 @@ public class AppjangleDataService implements DataService {
 
         CoreDsl dsl = client.one();
 
+       
+        
         dsl.load(loginDetails.userNodeUri()).withSecret(loginDetails.userNodeSecret()).in(client).and(new WhenLoaded() {
 
             @Override
