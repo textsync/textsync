@@ -39,7 +39,6 @@ public class ProcessFilesProcess {
         final List<String> files = getFilesRecursively(p.inputFile().getAbsoluteFile());
 
         
-         System.out.println("processing files: "+files);
         final CallbackLatch latch = new CallbackLatch(files.size()) {
 
             @Override
