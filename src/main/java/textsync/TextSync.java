@@ -111,11 +111,26 @@ public class TextSync {
 								"Unexpected challenge received."));
 						latch.countDown();
 					}
-					
+
 					@Override
 					public void thenDo(WithUserRegisteredResult loginDetails) {
-						System.out.println("Processing ["+args[7]+"] ...");
-						
+
+//						int idx = 7;
+//						while (args.length - 1 <= idx) {
+//							String file = args[idx];
+							System.out.println("Processing [" + args[7] + "] ...");
+							processFile(args, latch, exceptions, dsl,
+									createClient, loginDetails, args[7]);
+//							idx++;
+//						}
+					}
+
+					private void processFile(final String[] args,
+							final CountDownLatch latch,
+							final List<Throwable> exceptions,
+							final CoreDsl dsl, final OneClient createClient,
+							final WithUserRegisteredResult loginDetails,
+							final String file) {
 						final AppjangleDataService dataService = new AppjangleDataService(
 								createClient, loginDetails);
 
@@ -125,7 +140,8 @@ public class TextSync {
 
 							@Override
 							public File inputFile() {
-								return new File(args[7]);
+
+								return new File(file);
 							}
 
 							@Override
@@ -177,25 +193,26 @@ public class TextSync {
 
 									@Override
 									public void onSuccess() {
-										
-										dsl.shutdown(createClient).and(new WhenShutdown() {
-											
-											@Override
-											public void thenDo() {
-												System.out
-												.println("Synchronization completed successfully.");
-										latch.countDown();
-											}
 
-											@Override
-											public void onFailure(Throwable arg0) {
-												exceptions.add(arg0);
-												latch.countDown();
-											}
-											
-											
-										});
-										
+										dsl.shutdown(createClient).and(
+												new WhenShutdown() {
+
+													@Override
+													public void thenDo() {
+														System.out
+																.println("Synchronization completed successfully.");
+														latch.countDown();
+													}
+
+													@Override
+													public void onFailure(
+															Throwable arg0) {
+														exceptions.add(arg0);
+														latch.countDown();
+													}
+
+												});
+
 									}
 
 									@Override
@@ -207,7 +224,7 @@ public class TextSync {
 							}
 
 						};
-						
+
 						try {
 							ProcessFilesProcess.processFile(params);
 						} catch (Exception e) {
@@ -216,9 +233,8 @@ public class TextSync {
 						}
 					}
 
-					
 				};
-				
+
 			}
 		});
 
@@ -227,10 +243,10 @@ public class TextSync {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		if (exceptions.size() > 0) {
 			throw new RuntimeException(exceptions.get(0));
 		}
-		
+
 	}
 }
