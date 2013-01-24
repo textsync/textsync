@@ -8,7 +8,7 @@ Appjangle TextSync is a Java Swing application built on the [Appjangle](http://a
 
 You can download the latest executable below:
 
-[TextSync 0.0.7](https://dl.dropbox.com/u/957046/onedb/mvn-releases/aj/apps/textsync/textsync/0.0.7/TextSync-0.0.7-jar-with-dependencies.jar)
+[TextSync 0.1.0](https://dl.dropbox.com/u/957046/onedb/mvn-releases/com/appjangle/textsync/TextSync/0.1.0/TextSync-0.1.0-jar-with-dependencies.jar)
 
 Or get the source from github:
 
