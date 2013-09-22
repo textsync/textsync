@@ -239,7 +239,7 @@ public class AppjangleDataService implements DataService {
                             @Override
                             public void thenDo(WithLoadResult<Object> wlr) {
 
-                                assertChild(wlr.loadedNode(), "files", new WhenLoaded() {
+                                assertChild(wlr.loadedNode(), "upload", new WhenLoaded() {
 
                                     @Override
                                     public void thenDo(WithLoadResult<Object> wlr) {
