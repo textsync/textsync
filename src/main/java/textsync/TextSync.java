@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import de.mxro.javafileutils.monitor.FileCache;
 import one.client.jre.OneJre;
 import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
@@ -19,7 +20,6 @@ import one.core.dsl.grammars.LoginWithUserDetailsParameters;
 import textsync.internal.DataService;
 import textsync.internal.LogService;
 import textsync.internal.appjangle.AppjangleDataService;
-import textsync.internal.engine.FileCache;
 import textsync.internal.engine.Operation;
 import textsync.internal.engine.ProcessFilesProcess;
 import textsync.internal.engine.ProcessFilesProcess.ProcessFilesParameters;

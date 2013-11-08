@@ -9,6 +9,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.mxro.javafileutils.Collect;
+import de.mxro.javafileutils.monitor.FileCache;
 import one.async.joiner.CallbackLatch;
 import one.core.dsl.callbacks.WhenShutdown;
 import one.utils.jre.OneUtilsJre;
@@ -24,7 +27,7 @@ import textsync.internal.engine.ProcessFilesProcess.WhenFilesProcessed;
 public class SyncManager {
 
 	private static final boolean ENABLE_LOG = false;
-	
+
 	FileCache fileCache;
 	DataServiceFactory dataServiceFactory;
 	LogService logService;
@@ -41,20 +44,21 @@ public class SyncManager {
 
 	private Vector<SyncOperation> scheduledOperations;
 
-	public interface SyncOperation {
+	public static interface SyncOperation {
 		public List<File> files();
 
 		public SyncEvents listener();
 
 		public Set<Operation> skipOperations();
+
 	}
 
-	public interface FileProvider {
+	public static interface FileProvider {
 
 		public List<File> getFiles();
 	}
 
-	public interface SyncEvents {
+	public static interface SyncEvents {
 
 		public void synchronizationCompleted();
 
@@ -72,37 +76,37 @@ public class SyncManager {
 		if (fileCache == null) {
 			logService
 					.note("Performing initial synchronization to initialize cache ...");
-			
+
 			fileCache = new FileCache();
 			@SuppressWarnings("serial")
-            Set<Operation> skippedOperations= new HashSet<Operation>() {
-			    {
-			        add(Operation.DOWNLOAD);
-			    }
-			    
+			Set<Operation> skippedOperations = new HashSet<Operation>() {
+				{
+					add(Operation.DOWNLOAD);
+				}
+
 			};
-            scheduleSync(fileProvider.getFiles(), new SyncEvents() {
+			scheduleSync(fileProvider.getFiles(), new SyncEvents() {
 
-	            public void synchronizationCompleted() {
-	               
-	            }
+				public void synchronizationCompleted() {
 
-	            public void initSynchronization(int maxValue) {
-	                
-	            }
+				}
 
-	            public void updateProgressBar(int newValue) {
-	                
-	            }
+				public void initSynchronization(int maxValue) {
 
-	            public void onFailure(Throwable t) {
-	               
-	            }
+				}
 
-	            public void reportStatus(String status) {
-	                syncEventListener.reportStatus(status);
-	            }
-	        }, skippedOperations);
+				public void updateProgressBar(int newValue) {
+
+				}
+
+				public void onFailure(Throwable t) {
+
+				}
+
+				public void reportStatus(String status) {
+					syncEventListener.reportStatus(status);
+				}
+			}, skippedOperations);
 		}
 
 		if (fileMonitorTask != null) {
@@ -113,15 +117,15 @@ public class SyncManager {
 
 			@Override
 			public void run() {
-				
+
 				if (fastBackgroundSyncActive) {
 					return;
 				}
-				
+
 				fastBackgroundSyncActive = true;
 
 				final Set<File> modifiedFiles = new HashSet<File>();
-				for (File file : ProcessFilesProcess
+				for (File file : Collect
 						.getFilesRecursively(fileProvider.getFiles())) {
 
 					if (fileCache.hasCache(file) && fileCache.isModified(file)) {
@@ -195,7 +199,7 @@ public class SyncManager {
 				if (backgroundSyncActive) {
 					return;
 				}
-				
+
 				doFullSync(fileProvider.getFiles(), syncEventListener);
 			}
 		};
@@ -252,27 +256,25 @@ public class SyncManager {
 			final SyncEvents listener, final Set<Operation> skipOperations) {
 
 		synchronized (scheduledOperations) {
-			
+
 			if (ENABLE_LOG) {
-				System.out.println("Schedule sync for: "+files);
+				System.out.println("Schedule sync for: " + files);
 			}
-			
+
 			scheduledOperations.add(new SyncOperation() {
 
-				@Override
-				public Set<Operation> skipOperations() {
-					return skipOperations;
+				public List<File> files() {
+					return files;
 				}
 
-				@Override
 				public SyncEvents listener() {
 					return listener;
 				}
 
-				@Override
-				public List<File> files() {
-					return files;
+				public Set<Operation> skipOperations() {
+					return skipOperations;
 				}
+
 			});
 
 			performSyncs();
@@ -327,6 +329,7 @@ public class SyncManager {
 						public void initSynchronization(int maxValue) {
 							toPerform.listener().initSynchronization(maxValue);
 						}
+
 					});
 
 		}

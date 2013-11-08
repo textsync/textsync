@@ -6,10 +6,16 @@ package textsync.internal.engine;
 
 import textsync.internal.DataService;
 import textsync.internal.LogService;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
+
+import de.mxro.javafileutils.Collect;
+import de.mxro.javafileutils.Read;
+import de.mxro.javafileutils.Write;
+import de.mxro.javafileutils.monitor.FileCache;
 import one.async.joiner.CallbackLatch;
 
 /**
@@ -36,7 +42,7 @@ public class ProcessFilesProcess {
     
     public static void processFile(final ProcessFilesParameters p) throws Exception {
 
-        final List<String> files = getFilesRecursively(p.inputFile().getAbsoluteFile());
+        final List<String> files = Collect.getFilesRecursively(p.inputFile().getAbsoluteFile());
 
         
         final CallbackLatch latch = new CallbackLatch(files.size()) {
@@ -57,15 +63,7 @@ public class ProcessFilesProcess {
 
             // logService.note("  Loading file: " + filePath);
 
-            final FileInputStream fis = new FileInputStream(new File(
-                    filePath));
-            final Scanner scanner = new Scanner(fis, "UTF-8");
-
-            String file = "";
-            while (scanner.hasNextLine()) {
-                file += scanner.nextLine() + "\n";
-            }
-            fis.close();
+            String file = Read.asString(new File(filePath));
 
             final String fileClosed = file;
             //logService.note("  Start processing file: " + filePath);
@@ -112,12 +110,7 @@ public class ProcessFilesProcess {
 
                                 //logService.note("  Writing changed file: " + filePath);
                                 try {
-                                    FileOutputStream fos = new FileOutputStream(new File(filePath));
-
-                                    byte[] data = text.getBytes("UTF-8");
-                                    fos.write(data, 0, data.length);
-
-                                    fos.close();
+                                   Write.setContent(new File(filePath), text);
                                     
                                     if (p.cache() != null) {
                                     	p.cache().updateCache(new File(filePath));
@@ -146,42 +139,6 @@ public class ProcessFilesProcess {
 
     }
 
-    public static List<String> getFilesRecursively(final File dir) {
-        final ArrayList<String> list = new ArrayList<String>(100);
-
-        if (dir.isFile()) {
-            list.add(dir.getAbsolutePath());
-            return list;
-        }
-
-        final File[] files = dir.listFiles();
-        if (files != null) {
-            for (final File f : files) {
-                if (f.isDirectory()) {
-                    list.addAll(getFilesRecursively(f));
-                } else {
-                    list.add(f.getAbsolutePath());
-                }
-            }
-        }
-        return list;
-    }
-
-     public static List<File> getFilesRecursively(final List<File> files) {
-         List<String> res = new ArrayList<String>(files.size());
-         for (File file: files) {
-             res.addAll(getFilesRecursively(file));
-         }
-         
-         List<File> resFiles = new ArrayList<File>(res.size());
-         
-         for (String path : res) {
-             resFiles.add(new File(path));
-         }
-         
-         return resFiles;
-     }
-    
     private static String getExtension(String path) {
         final int idx = path.lastIndexOf(".");
         return path.substring(idx + 1);
