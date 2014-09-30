@@ -69,7 +69,7 @@ public class TextSync {
 		
 		LoginResult loginRq = session.login(username, password);
 		
-		loginRq.catchLoginFailures(new DefaultLoginHandler(latch, args, exceptions));
+		loginRq.catchLoginFailures(new DefaultLoginHandler(latch, exceptions));
 		
 		loginRq.get(new Closure<User>() {
 
@@ -137,26 +137,14 @@ public class TextSync {
 
 							@Override
 							public void onSuccess() {
-
-								dsl.shutdown(createClient).and(
-										new WhenShutdown() {
-
-											@Override
-											public void thenDo() {
-												System.out
-														.println("Synchronization completed successfully.");
-												latch.countDown();
-											}
-
-											@Override
-											public void onFailure(
-													Throwable arg0) {
-												exceptions.add(arg0);
-												latch.countDown();
-											}
-
-										});
-
+								
+								session.close().get();
+								
+								System.out
+								.println("Synchronization completed successfully.");
+						latch.countDown();
+								
+								
 							}
 
 							@Override
@@ -195,13 +183,13 @@ public class TextSync {
 	
 	private static final class DefaultLoginHandler implements LoginFailuresListener {
 		private final CountDownLatch latch;
-		private final String[] args;
+	
 		private final List<Throwable> exceptions;
 
-		private DefaultLoginHandler(CountDownLatch latch, String[] args,
+		private DefaultLoginHandler(CountDownLatch latch, 
 				List<Throwable> exceptions) {
 			this.latch = latch;
-			this.args = args;
+
 			this.exceptions = exceptions;
 		}
 
