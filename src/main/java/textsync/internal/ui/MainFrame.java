@@ -4,6 +4,7 @@
  */
 package textsync.internal.ui;
 
+import io.nextweb.Node;
 import io.nextweb.Session;
 import io.nextweb.common.User;
 
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import de.mxro.fn.Closure;
 import one.core.dsl.callbacks.WhenLoaded;
 import one.core.dsl.callbacks.WhenShutdown;
 import one.core.dsl.callbacks.results.WithLoadResult;
@@ -92,14 +94,24 @@ public class MainFrame extends javax.swing.JFrame {
                         destPanel.validate();
                         destPanel.revalidate();
                         System.out.println("loading");
-                        session.link(user.userNode().uri(), user.userNode().secret()).get();
-                        System.out.println("got it.");
-                        destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
+                        String userUri = user.userNode().uri();
+						String userSecret = user.userNode().secret();
+						
+						System.out.println(userUri+" "+userSecret);
+						session.link(userUri, userSecret).get(new Closure<Node>() {
+							
+							@Override
+							public void apply(Node o) {
+								 System.out.println("got it.");
+			                        destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
-                        destPanel.validate();
-                        destPanel.revalidate();
-                        
-                       System.out.println("showed it.");
+			                        destPanel.validate();
+			                        destPanel.revalidate();
+			                        
+			                       System.out.println("showed it.");
+							}
+						});
+                       
     
 
                     }
