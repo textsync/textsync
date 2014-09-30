@@ -92,7 +92,7 @@ public class MainFrame extends javax.swing.JFrame {
                         destPanel.validate();
                         destPanel.revalidate();
                         System.out.println("loading");
-                        session.link(user.userNode()).get();
+                        session.link(user.userNode().uri(), user.userNode().secret()).get();
                         System.out.println("got it.");
                         destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
