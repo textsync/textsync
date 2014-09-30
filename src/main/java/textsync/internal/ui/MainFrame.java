@@ -4,17 +4,20 @@
  */
 package textsync.internal.ui;
 
-import textsync.internal.appjangle.AppjangleLogin;
+import io.nextweb.Session;
+import io.nextweb.common.User;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
+
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import one.core.domain.OneClient;
+
 import one.core.dsl.callbacks.WhenLoaded;
 import one.core.dsl.callbacks.WhenShutdown;
 import one.core.dsl.callbacks.results.WithLoadResult;
-import one.core.dsl.callbacks.results.WithUserRegisteredResult;
+import textsync.internal.appjangle.AppjangleLogin;
 
 /**
  *
@@ -82,32 +85,23 @@ public class MainFrame extends javax.swing.JFrame {
 
                 final AppjangleLogin loginForm = new AppjangleLogin(new AppjangleLogin.WhenLoggedIn() {
 
-                    public void thenDo(final OneClient client, final Component p_loginForm, final WithUserRegisteredResult wurr) {
+                    public void thenDo(final Session session, final Component p_loginForm, final User user) {
                         final JPanel destPanel = mf.contentPanel;
                         
                         destPanel.remove(p_loginForm);
                         destPanel.validate();
                         destPanel.revalidate();
                         
-                        client.one().load(wurr.userNodeUri()).withSecret(wurr.userNodeSecret()).in(client).and(new WhenLoaded() {
+                        session.link(user.userNode()).get();
+                        
+                        destPanel.add(new SyncPanel(client.one(), wurr), BorderLayout.CENTER);
 
-                            @Override
-                            public void thenDo(WithLoadResult<Object> wlr) {
-                               
-
-                                destPanel.add(new SyncPanel(client.one(), wurr), BorderLayout.CENTER);
-
-                                destPanel.validate();
-                                destPanel.revalidate();
-                                
-                                client.one().shutdown(client).and(WhenShutdown.DO_NOTHING);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                super.onFailure(t);
-                            }
-                        });
+                        destPanel.validate();
+                        destPanel.revalidate();
+                        
+                        session.close().get();
+                        
+                      
 
 
 

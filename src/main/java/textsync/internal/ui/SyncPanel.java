@@ -4,6 +4,9 @@
  */
 package textsync.internal.ui;
 
+import io.nextweb.Session;
+import io.nextweb.common.User;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -13,8 +16,10 @@ import java.io.File;
 import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
 import javax.swing.DefaultListModel;
 import javax.swing.TransferHandler;
+
 import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
 import one.core.dsl.callbacks.WhenLoaded;
@@ -39,7 +44,7 @@ public class SyncPanel extends javax.swing.JPanel {
     private static final long serialVersionUID = 1L;
     
     SyncManager syncManager;
-    WithUserRegisteredResult registrationInfos;
+    User registrationInfos;
     DataServiceFactory dataServiceFactory;
     FileProvider fileProvider;
     LogService logService = new LogService() {
@@ -95,13 +100,13 @@ public class SyncPanel extends javax.swing.JPanel {
     /**
      * Creates new form SyncPanel
      */
-    public SyncPanel(CoreDsl dsl, WithUserRegisteredResult wurr) {
-        this.registrationInfos = wurr;
+    public SyncPanel(Session session, User user) {
+        this.registrationInfos = user;
         initComponents();
 
         restoreSelectedDirsFromPrefs();
 
-        dataServiceFactory = new AppjangleDataServiceFactory(dsl, wurr);
+        dataServiceFactory = new AppjangleDataServiceFactory(session, user);
 
         this.directories.setDragEnabled(true);
 
