@@ -4,10 +4,10 @@
  */
 package textsync.internal.appjangle;
 
+import io.nextweb.Node;
 import io.nextweb.Session;
 import io.nextweb.common.User;
 import one.common.extend.OneExtend;
-import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
 import one.core.dsl.callbacks.WhenCommitted;
 import one.core.dsl.callbacks.WhenLoaded;
@@ -17,7 +17,6 @@ import one.core.dsl.callbacks.WhenVersionsCleared;
 import one.core.dsl.callbacks.results.WithCommittedResult;
 import one.core.dsl.callbacks.results.WithLoadResult;
 import one.core.dsl.callbacks.results.WithOperationResult;
-import one.core.dsl.callbacks.results.WithUserRegisteredResult;
 import one.core.dsl.callbacks.results.WithVersionsClearedResult;
 import one.core.nodes.OneNode;
 import one.core.nodes.OneValue;
@@ -38,61 +37,21 @@ public class AppjangleDataService implements DataService {
     }
 
     public void uploadChanges(final String newValue, String nodeUri, final WhenChangesUploaded callback) {
+    	Node resolvedNode = session.link(nodeUri, user.userNode().secret()).reload().get();
 
- 
-        Object resolvedNode = session.link(nodeUri, user.userNode().secret()).reload().get();
-
-        if (!(resolvedNode instanceof OneValue<?>)) {
-            callback.onFailure(new Exception("Node was not of type OneValue: " + resolvedNode));
-            return;
-        }
-
-        OneValue<?> valueNode = (OneValue<?>) resolvedNode;
-
-        if (!(valueNode.getValue() instanceof String)) {
-            callback.onFailure(new Exception("Value nodes value was not of type String: " + valueNode));
-            return;
-        }
-
-        String oldValue = (String) valueNode.getValue();
+        String oldValue = resolvedNode.value(String.class);
 
         if (oldValue.equals(newValue)) {
             callback.thenDo(false);
             return;
         }
 
-        OneValue<String> newValueNode = dsl.newNode(newValue).at(valueNode.getId());
-
-        dsl.replaceSafe(valueNode).with(newValueNode).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
-
-            @Override
-            public void thenDo(WithOperationResult<OneValue<String>> wor) {
-                dsl.clearVersions(wor.node()).andKeepOnServer(3).in(session).and(new WhenVersionsCleared() {
-
-                            @Override
-                            public void thenDo(WithVersionsClearedResult wvcr) {
-                                callback.thenDo(true);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                callback.onFailure(t);
-                            }
-                            
-                            
-                        });
-                
-                
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+        resolvedNode.setValue(newValue).get();
         
-      
-
+        resolvedNode.clearVersions(3).get();
+        
+        callback.thenDo(true);
+       
 
     }
 
@@ -197,7 +156,8 @@ public class AppjangleDataService implements DataService {
     }
 
     public void shutdown(WhenShutdown callback) {
-        session.one().shutdown(session).and(callback);
+        session.close().get();
+        callback.thenDo();
     }
 
     private interface WhenSyncDataNodeAsserted {
