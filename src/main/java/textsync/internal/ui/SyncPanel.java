@@ -461,31 +461,16 @@ public class SyncPanel extends javax.swing.JPanel {
         final Container destPanel = parent;
         AppjangleLogin login = new AppjangleLogin(new AppjangleLogin.WhenLoggedIn() {
 
-            public void thenDo(final OneClient client, final Component p_loginForm, final WithUserRegisteredResult wurr) {
+            public void thenDo(final Session session, final Component p_loginForm, final User user) {
 
                 destPanel.remove(p_loginForm);
                 destPanel.validate();
                 //destPanel.revalidate();
+                
+                destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
-                client.one().load(wurr.userNodeUri()).withSecret(wurr.userNodeSecret()).in(client).and(new WhenLoaded() {
-
-                    @Override
-                    public void thenDo(WithLoadResult<Object> wlr) {
-
-
-                        destPanel.add(new SyncPanel(client.one(), wurr), BorderLayout.CENTER);
-
-                        destPanel.validate();
-                        // destPanel.revalidate();
-
-                        client.one().shutdown(client).and(WhenShutdown.DO_NOTHING);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        super.onFailure(t);
-                    }
-                });
+                destPanel.validate();
+               
             }
         });
         parent.add(login, BorderLayout.CENTER);
