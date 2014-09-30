@@ -99,7 +99,7 @@ public class MainFrame extends javax.swing.JFrame {
                         destPanel.validate();
                         destPanel.revalidate();
                         
-                        session.close().get();
+                        //session.close().get();
     
 
                     }
