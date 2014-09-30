@@ -68,7 +68,7 @@ public class AppjangleDataService implements DataService {
     }
 
     public void shutdown(WhenShutdown callback) {
-        session.close().get();
+        //session.close().get();
         callback.thenDo();
     }
 
