@@ -5,20 +5,26 @@
 package textsync.internal.engine;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import de.mxro.javafileutils.Collect;
-import de.mxro.javafileutils.monitor.FileCache;
-import one.async.joiner.CallbackLatch;
 import one.core.dsl.callbacks.WhenShutdown;
-import one.utils.jre.OneUtilsJre;
 import textsync.internal.DataService;
 import textsync.internal.DataServiceFactory;
 import textsync.internal.LogService;
 import textsync.internal.engine.ProcessFilesProcess.WhenFilesProcessed;
+import de.mxro.async.flow.CallbackLatch;
+import de.mxro.javafileutils.Collect;
+import de.mxro.javafileutils.monitor.FileCache;
 
 /**
  * 

@@ -183,7 +183,7 @@ public class AppjangleLogin extends javax.swing.JPanel {
         
         updateUiForLogin();
         
-        final CoreDsl dsl = OneJre.init();
+        final CoreDsl dsl = OneJre
         
         final OneClient c = dsl.createClient();
         
