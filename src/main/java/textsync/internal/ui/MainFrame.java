@@ -94,16 +94,13 @@ public class MainFrame extends javax.swing.JFrame {
                         
                         session.link(user.userNode()).get();
                         
-                        destPanel.add(new SyncPanel(client.one(), wurr), BorderLayout.CENTER);
+                        destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
                         destPanel.validate();
                         destPanel.revalidate();
                         
                         session.close().get();
-                        
-                      
-
-
+    
 
                     }
                 });
