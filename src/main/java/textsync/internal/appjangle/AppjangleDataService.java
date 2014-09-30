@@ -58,58 +58,7 @@ public class AppjangleDataService implements DataService {
     @Override
     public void createNewNode(final String value, final String title, final String extension, final boolean isPublic, final WhenNewNodeCreated callback) {
 
-        assertAjFileSyncDataNode(new WhenSyncDataNodeAsserted() {
-
-            public void thenDo(OneNode syncDataNode) {
-                final CoreDsl dsl = session.one();
-               
-                dsl.appendSafe(value).to(syncDataNode).atClosestAddress("./" + title).withSecret(user.userNodeSecret()).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
-
-                    @Override
-                    public void thenDo(final WithOperationResult<OneValue<String>> wor) {
-
-                        dsl.append(dsl.reference("https://u1.linnk.it/6wbnoq/Types/aTextValue")).to(wor.node()).in(session);
-
-                        dsl.append(dsl.reference("https://u1.linnk.it/6wbnoq/Types/aTemplate")).to(wor.node()).in(session);
-
-                        if (extension.equals("md")) {
-                            dsl.append(dsl.reference("https://u1.linnk.it/6wbnoq/Types/isMarkdown")).to(wor.node()).in(session);
-                            dsl.append(dsl.reference("https://admin1.linnk.it/types/v01/isHtmlValue")).to(wor.node()).in(session);
-                        }
-
-                        if (extension.equals("html")) {
-                            dsl.append(dsl.reference("https://admin1.linnk.it/types/v01/isHtmlValue")).to(wor.node()).in(session);
-                        }
-
-                        if (isPublic) {
-                            dsl.append(dsl.newNode().asPublicReadToken()).to(wor.node()).in(session);
-                        }
-                        
-                        dsl.commit(session).and(new WhenCommitted() {
-
-                            @Override
-                            public void thenDo(WithCommittedResult wcr) {
-                               
-                                callback.thenDo(wor.node());
-                            }
-                        });
-                        
-                        
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
-
-
-            }
-
-            public void onFailure(Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+       throw new RuntimeException("Not supported.")
 
     }
 
