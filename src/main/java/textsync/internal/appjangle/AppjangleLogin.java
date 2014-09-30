@@ -5,6 +5,11 @@
 package textsync.internal.appjangle;
 
 import io.nextweb.Session;
+import io.nextweb.common.LoginResult;
+import io.nextweb.common.User;
+import io.nextweb.jre.Nextweb;
+import io.nextweb.operations.exceptions.ChallengedResult;
+import io.nextweb.operations.exceptions.LoginFailuresListener;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -12,6 +17,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
+import de.mxro.fn.Closure;
 import one.client.jre.OneJre;
 import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
@@ -35,7 +41,7 @@ public class AppjangleLogin extends javax.swing.JPanel {
     
     public interface WhenLoggedIn {
         
-        public void thenDo(OneClient client, Component loginForm, WithUserRegisteredResult wurr);
+        public void thenDo(Session session, Component loginForm, User user);
     }
 
     /**
@@ -187,73 +193,65 @@ public class AppjangleLogin extends javax.swing.JPanel {
         
         final Session session = Nextweb.createSession();
         
-        dsl.loginUser(new LoginWithSessionIdParameters() {
+        LoginResult loginRq = session.login(sessionId);
+        
+        loginRq.catchLoginFailures(new LoginFailuresListener() {
 
-            public String getSessionToken() {
-                return sessionId;
-            }
+			@Override
+			public void onChallenged(ChallengedResult arg0) {
+				JOptionPane.showMessageDialog(null, "Unexpected challenge received.");
+                remove(lp);
+                showDetailsPanel();
+			}
 
-            public String getApplicationNodeUri() {
-                return "https://u1.linnk.it/0fs7dr/Apps1/appjangle";
-            }
+			@Override
+			public void onInvalidDetails() {
+				JOptionPane.showMessageDialog(null, "Invalid username/password or session expired.");
+                remove(lp);
+                showDetailsPanel();
+			}
 
-            public String getApplicationNodeSecret() {
-                return "";
-            }
+			@Override
+			public void onNotRegisteredForApplication() {
+				JOptionPane.showMessageDialog(null, "User is not registered for application.");
+                remove(lp);
+                showDetailsPanel();
+				
+			}
 
-            public OneClient getClient() {
-               return c;
-            }
-
-            public WhenUserLoggedIn getCallback() {
-               return createLoggedInCallback(c);
-            }
+			@Override
+			public void onUserAlreadyRegistered() {
+				JOptionPane.showMessageDialog(null, "Unexpected already registered received.");
+                remove(lp);
+                showDetailsPanel();
+				
+			}
+        	
         });
+        
+        loginRq.get(new Closure<User>() {
+			
+			@Override
+			public void apply(User user) {
+				if (saveLoginData.isSelected()) {
+                    Preferences prefs = Preferences.userNodeForPackage(TextSync.class);
+                    
+                    prefs.put("sessionId", user.sessionToken());
+                    
+                }
+                
+                //remove(lp);
+                //showDetailsPanel();
+                
+                callback.thenDo(session, AppjangleLogin.this, user);
+			}
+		});
+        
+       
         
     }
     
-    private WhenUserLoggedIn createLoggedInCallback(final OneClient c) {
-            return new WhenUserLoggedIn() {
-                    
-                    public void thenDo(WithUserRegisteredResult wurr) {
-                        if (saveLoginData.isSelected()) {
-                            Preferences prefs = Preferences.userNodeForPackage(TextSync.class);
-                            
-                            prefs.put("sessionId", wurr.sessionToken());
-                            
-                        }
-                        
-                        //remove(lp);
-                        //showDetailsPanel();
-                        
-                        callback.thenDo(c, AppjangleLogin.this, wurr);
-                    }
-                    
-                    public void onChallenge(WithChallengedContext wcc) {
-                        JOptionPane.showMessageDialog(null, "Unexpected challenge received.");
-                        remove(lp);
-                        showDetailsPanel();
-                    }
-                    
-                    public void onInvalidDetails() {
-                        JOptionPane.showMessageDialog(null, "Invalid username/password or session expired.");
-                        remove(lp);
-                        showDetailsPanel();
-                    }
-                    
-                    public void onNotRegisteredForApplication() {
-                        JOptionPane.showMessageDialog(null, "User is not registered for application.");
-                        remove(lp);
-                        showDetailsPanel();
-                    }
-                    
-                    public void onFailure(Throwable thrwbl) {
-                        JOptionPane.showMessageDialog(null, "Unexpected error: " + thrwbl);
-                        remove(lp);
-                        showDetailsPanel();
-                    }
-                };
-    }
+    
     
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
 
