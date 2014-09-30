@@ -39,65 +39,50 @@ public class AppjangleDataService implements DataService {
 
     public void uploadChanges(final String newValue, String nodeUri, final WhenChangesUploaded callback) {
 
-        final CoreDsl dsl = session.one();
-         
-        dsl.reload(dsl.reference(nodeUri)).withSecret(user.userNodeSecret()).in(session).and(new WhenLoaded() {
+ 
+        Object resolvedNode = session.link(nodeUri, user.userNode().secret()).reload().get();
+
+        if (!(resolvedNode instanceof OneValue<?>)) {
+            callback.onFailure(new Exception("Node was not of type OneValue: " + resolvedNode));
+            return;
+        }
+
+        OneValue<?> valueNode = (OneValue<?>) resolvedNode;
+
+        if (!(valueNode.getValue() instanceof String)) {
+            callback.onFailure(new Exception("Value nodes value was not of type String: " + valueNode));
+            return;
+        }
+
+        String oldValue = (String) valueNode.getValue();
+
+        if (oldValue.equals(newValue)) {
+            callback.thenDo(false);
+            return;
+        }
+
+        OneValue<String> newValueNode = dsl.newNode(newValue).at(valueNode.getId());
+
+        dsl.replaceSafe(valueNode).with(newValueNode).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
 
             @Override
-            public void thenDo(WithLoadResult<Object> wlr) {
+            public void thenDo(WithOperationResult<OneValue<String>> wor) {
+                dsl.clearVersions(wor.node()).andKeepOnServer(3).in(session).and(new WhenVersionsCleared() {
 
-                Object resolvedNode = dsl.dereference(wlr.loadedNode()).in(session);
+                            @Override
+                            public void thenDo(WithVersionsClearedResult wvcr) {
+                                callback.thenDo(true);
+                            }
 
-                if (!(resolvedNode instanceof OneValue<?>)) {
-                    callback.onFailure(new Exception("Node was not of type OneValue: " + wlr.loadedNode()));
-                    return;
-                }
-
-                OneValue<?> valueNode = (OneValue<?>) resolvedNode;
-
-                if (!(valueNode.getValue() instanceof String)) {
-                    callback.onFailure(new Exception("Value nodes value was not of type String: " + valueNode));
-                    return;
-                }
-
-                String oldValue = (String) valueNode.getValue();
-
-                if (oldValue.equals(newValue)) {
-                    callback.thenDo(false);
-                    return;
-                }
-
-                OneValue<String> newValueNode = dsl.newNode(newValue).at(valueNode.getId());
-
-                dsl.replaceSafe(valueNode).with(newValueNode).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
-
-                    @Override
-                    public void thenDo(WithOperationResult<OneValue<String>> wor) {
-                        dsl.clearVersions(wor.node()).andKeepOnServer(3).in(session).and(new WhenVersionsCleared() {
-
-                                    @Override
-                                    public void thenDo(WithVersionsClearedResult wvcr) {
-                                        callback.thenDo(true);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Throwable t) {
-                                        callback.onFailure(t);
-                                    }
-                                    
-                                    
-                                });
-                        
-                        
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
-
-
+                            @Override
+                            public void onFailure(Throwable t) {
+                                callback.onFailure(t);
+                            }
+                            
+                            
+                        });
+                
+                
             }
 
             @Override
@@ -105,6 +90,8 @@ public class AppjangleDataService implements DataService {
                 callback.onFailure(t);
             }
         });
+        
+      
 
 
     }
