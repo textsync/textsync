@@ -17,17 +17,9 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
-import de.mxro.fn.Closure;
-import one.client.jre.OneJre;
-import one.core.domain.OneClient;
-import one.core.dsl.CoreDsl;
-import one.core.dsl.callbacks.WhenUserLoggedIn;
-import one.core.dsl.callbacks.results.WithChallengedContext;
-import one.core.dsl.callbacks.results.WithUserRegisteredResult;
-import one.core.dsl.grammars.LoginWithSessionIdParameters;
-import one.core.dsl.grammars.LoginWithUserDetailsParameters;
 import textsync.TextSync;
 import textsync.internal.ui.LogginInPanel;
+import de.mxro.fn.Closure;
 
 /**
  *
@@ -227,6 +219,7 @@ public class AppjangleLogin extends javax.swing.JPanel {
         
         loginRq.catchLoginFailures(new DefaultLoginFailureListener());
         
+        System.out.println("HERE");
         loginRq.get(new Closure<User>() {
 			
 			@Override
@@ -237,7 +230,7 @@ public class AppjangleLogin extends javax.swing.JPanel {
                     prefs.put("sessionId", user.sessionToken());
                     
                 }
-                
+                System.out.println("and here");
                 
                 callback.thenDo(session, AppjangleLogin.this, user);
 			}
