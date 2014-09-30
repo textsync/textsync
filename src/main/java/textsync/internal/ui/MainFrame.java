@@ -93,22 +93,21 @@ public class MainFrame extends javax.swing.JFrame {
                         destPanel.remove(p_loginForm);
                         destPanel.validate();
                         destPanel.revalidate();
-                        System.out.println("loading");
+
                         String userUri = user.userNode().uri();
 						String userSecret = user.userNode().secret();
 						
-						System.out.println(userUri+" "+userSecret);
 						session.link(userUri, userSecret).get(new Closure<Node>() {
 							
 							@Override
 							public void apply(Node o) {
-								 System.out.println("got it.");
+								
 			                        destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
 			                        destPanel.validate();
 			                        destPanel.revalidate();
 			                        
-			                       System.out.println("showed it.");
+			                      
 							}
 						});
                        
