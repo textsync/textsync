@@ -39,7 +39,39 @@ public class AppjangleLogin extends javax.swing.JPanel {
 	private final WhenLoggedIn callback;
     private LogginInPanel lp;
     
-    public interface WhenLoggedIn {
+    private final class DefaultLoginFailureListener implements
+			LoginFailuresListener {
+		@Override
+		public void onChallenged(ChallengedResult arg0) {
+			JOptionPane.showMessageDialog(null, "Unexpected challenge received.");
+		    remove(lp);
+		    showDetailsPanel();
+		}
+
+		@Override
+		public void onInvalidDetails() {
+			JOptionPane.showMessageDialog(null, "Invalid username/password or session expired.");
+		    remove(lp);
+		    showDetailsPanel();
+		}
+
+		@Override
+		public void onNotRegisteredForApplication() {
+			JOptionPane.showMessageDialog(null, "User is not registered for application.");
+		    remove(lp);
+		    showDetailsPanel();
+			
+		}
+
+		@Override
+		public void onUserAlreadyRegistered() {
+			JOptionPane.showMessageDialog(null, "Unexpected already registered received.");
+		    remove(lp);
+		    showDetailsPanel();
+			
+		}
+	}
+	public interface WhenLoggedIn {
         
         public void thenDo(Session session, Component loginForm, User user);
     }
@@ -188,46 +220,12 @@ public class AppjangleLogin extends javax.swing.JPanel {
     private void loginWithSessionId(final String sessionId) {
         
         updateUiForLogin();
-        
-       
-        
+
         final Session session = Nextweb.createSession();
         
         LoginResult loginRq = session.login(sessionId);
         
-        loginRq.catchLoginFailures(new LoginFailuresListener() {
-
-			@Override
-			public void onChallenged(ChallengedResult arg0) {
-				JOptionPane.showMessageDialog(null, "Unexpected challenge received.");
-                remove(lp);
-                showDetailsPanel();
-			}
-
-			@Override
-			public void onInvalidDetails() {
-				JOptionPane.showMessageDialog(null, "Invalid username/password or session expired.");
-                remove(lp);
-                showDetailsPanel();
-			}
-
-			@Override
-			public void onNotRegisteredForApplication() {
-				JOptionPane.showMessageDialog(null, "User is not registered for application.");
-                remove(lp);
-                showDetailsPanel();
-				
-			}
-
-			@Override
-			public void onUserAlreadyRegistered() {
-				JOptionPane.showMessageDialog(null, "Unexpected already registered received.");
-                remove(lp);
-                showDetailsPanel();
-				
-			}
-        	
-        });
+        loginRq.catchLoginFailures(new DefaultLoginFailureListener());
         
         loginRq.get(new Closure<User>() {
 			
@@ -240,8 +238,6 @@ public class AppjangleLogin extends javax.swing.JPanel {
                     
                 }
                 
-                //remove(lp);
-                //showDetailsPanel();
                 
                 callback.thenDo(session, AppjangleLogin.this, user);
 			}
@@ -255,38 +251,31 @@ public class AppjangleLogin extends javax.swing.JPanel {
     
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
 
-        updateUiForLogin();
-        
-        final CoreDsl dsl = OneJre.init();
-        
-        final OneClient c = dsl.createClient();
-        
-        dsl.loginUser(new LoginWithUserDetailsParameters() {
-            
-            public String getEmail() {
-                return emailField.getText();
-            }
-            
-            public String getPassword() {
-                return String.valueOf(passwordFiled.getPassword());
-            }
-            
-            public String getApplicationNodeUri() {
-                return "https://u1.linnk.it/0fs7dr/Apps1/appjangle";
-            }
-            
-            public String getApplicationNodeSecret() {
-                return "";
-            }
-            
-            public OneClient getClient() {
-                return c;
-            }
-            
-            public WhenUserLoggedIn getCallback() {
-                return createLoggedInCallback(c);
-            }
-        });
+    	updateUiForLogin();
+    	
+    	 final Session session = Nextweb.createSession();
+         
+         LoginResult loginRq = session.login(emailField.getText(), String.valueOf(passwordFiled.getPassword()));
+         
+         loginRq.catchLoginFailures(new DefaultLoginFailureListener());
+         
+         loginRq.get(new Closure<User>() {
+ 			
+ 			@Override
+ 			public void apply(User user) {
+ 				if (saveLoginData.isSelected()) {
+                     Preferences prefs = Preferences.userNodeForPackage(TextSync.class);
+                     
+                     prefs.put("sessionId", user.sessionToken());
+                     
+                 }
+                 
+                 
+                 callback.thenDo(session, AppjangleLogin.this, user);
+ 			}
+ 		});
+    	
+      
        
         
     }//GEN-LAST:event_loginButtonActionPerformed
