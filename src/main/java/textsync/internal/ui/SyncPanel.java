@@ -13,19 +13,19 @@ import java.awt.Container;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.swing.DefaultListModel;
 import javax.swing.TransferHandler;
 
-import one.core.domain.OneClient;
-import one.core.dsl.CoreDsl;
-import one.core.dsl.callbacks.WhenLoaded;
-import one.core.dsl.callbacks.WhenShutdown;
-import one.core.dsl.callbacks.results.WithLoadResult;
-import one.core.dsl.callbacks.results.WithUserRegisteredResult;
 import textsync.TextSync;
 import textsync.internal.DataServiceFactory;
 import textsync.internal.LogService;
@@ -114,7 +114,10 @@ public class SyncPanel extends javax.swing.JPanel {
 
         TransferHandler handler = new TransferHandler() {
 
-            @Override
+           
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean canImport(TransferHandler.TransferSupport info) {
                 // we only import FileList
                 if (!info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
