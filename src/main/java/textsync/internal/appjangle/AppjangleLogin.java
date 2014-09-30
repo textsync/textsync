@@ -230,7 +230,7 @@ public class AppjangleLogin extends javax.swing.JPanel {
                     prefs.put("sessionId", user.sessionToken());
                     
                 }
-                System.out.println("and here");
+               
                 
                 callback.thenDo(session, AppjangleLogin.this, user);
 			}

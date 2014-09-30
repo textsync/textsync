@@ -91,15 +91,15 @@ public class MainFrame extends javax.swing.JFrame {
                         destPanel.remove(p_loginForm);
                         destPanel.validate();
                         destPanel.revalidate();
-                        
+                        System.out.println("loading");
                         session.link(user.userNode()).get();
-                        
+                        System.out.println("got it.");
                         destPanel.add(new SyncPanel(session, user), BorderLayout.CENTER);
 
                         destPanel.validate();
                         destPanel.revalidate();
                         
-                        //session.close().get();
+                       System.out.println("showed it.");
     
 
                     }
