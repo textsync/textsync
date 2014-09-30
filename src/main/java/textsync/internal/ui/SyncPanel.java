@@ -103,6 +103,7 @@ public class SyncPanel extends javax.swing.JPanel {
      */
     public SyncPanel(Session session, User user) {
         this.user = user;
+        this.session = session;
         initComponents();
 
         restoreSelectedDirsFromPrefs();
@@ -461,7 +462,8 @@ public class SyncPanel extends javax.swing.JPanel {
 
         final Container destPanel = parent;
         
-        
+        // close session to allow for complete new login
+        session.close().get();
         
         AppjangleLogin login = new AppjangleLogin(new AppjangleLogin.WhenLoggedIn() {
 
