@@ -25,8 +25,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.appjangle.java</groupId>
-			<artifactId>appjangle-javaonedb</artifactId>
+			<groupId>com.appjangle.jreinternal</groupId>
+			<artifactId>appjangle-jre-internal</artifactId>
 			<version>[0.0.1,)</version>
 		</dependency>
 
@@ -75,7 +75,7 @@
 			</plugin>
 
 		</plugins>
-	<extensions>
+		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh-external</artifactId>
