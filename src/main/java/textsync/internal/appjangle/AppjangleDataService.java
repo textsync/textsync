@@ -4,6 +4,8 @@
  */
 package textsync.internal.appjangle;
 
+import io.nextweb.Session;
+import io.nextweb.common.User;
 import one.common.extend.OneExtend;
 import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
@@ -27,19 +29,19 @@ import textsync.internal.DataService;
  */
 public class AppjangleDataService implements DataService {
 
-    private final OneClient session;
-    private final WithUserRegisteredResult loginDetails;
+    private final Session session;
+    private final User user;
 
-    public AppjangleDataService(OneClient client, WithUserRegisteredResult loginDetails) {
-        this.session = client;
-        this.loginDetails = loginDetails;
+    public AppjangleDataService(Session session, User user) {
+        this.session = session;
+        this.user = user;
     }
 
     public void uploadChanges(final String newValue, String nodeUri, final WhenChangesUploaded callback) {
 
         final CoreDsl dsl = session.one();
          
-        dsl.reload(dsl.reference(nodeUri)).withSecret(loginDetails.userNodeSecret()).in(session).and(new WhenLoaded() {
+        dsl.reload(dsl.reference(nodeUri)).withSecret(user.userNodeSecret()).in(session).and(new WhenLoaded() {
 
             @Override
             public void thenDo(WithLoadResult<Object> wlr) {
@@ -115,7 +117,7 @@ public class AppjangleDataService implements DataService {
             public void thenDo(OneNode syncDataNode) {
                 final CoreDsl dsl = session.one();
                
-                dsl.appendSafe(value).to(syncDataNode).atClosestAddress("./" + title).withSecret(loginDetails.userNodeSecret()).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
+                dsl.appendSafe(value).to(syncDataNode).atClosestAddress("./" + title).withSecret(user.userNodeSecret()).in(session).and(new WhenResponseFromServerReceived<OneValue<String>>() {
 
                     @Override
                     public void thenDo(final WithOperationResult<OneValue<String>> wor) {
@@ -168,7 +170,7 @@ public class AppjangleDataService implements DataService {
     public void downloadChanges(final String localValue, String nodeUri, final WhenChangesDownloaded callback) {
        final CoreDsl dsl = session.one();
 
-        dsl.reload(nodeUri).withSecret(loginDetails.userNodeSecret()).in(session).and(new WhenLoaded() {
+        dsl.reload(nodeUri).withSecret(user.userNodeSecret()).in(session).and(new WhenLoaded() {
 
             @Override
             public void thenDo(WithLoadResult<Object> wlr) {
@@ -224,7 +226,7 @@ public class AppjangleDataService implements DataService {
 
        
         
-        dsl.load(loginDetails.userNodeUri()).withSecret(loginDetails.userNodeSecret()).in(session).and(new WhenLoaded() {
+        dsl.load(user.userNodeUri()).withSecret(user.userNodeSecret()).in(session).and(new WhenLoaded() {
 
             @Override
             public void thenDo(WithLoadResult<Object> wlr) {

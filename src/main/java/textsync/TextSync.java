@@ -59,7 +59,7 @@ public class TextSync {
 				.synchronizedList(new LinkedList<Throwable>());
 
 
-		Session session = Nextweb.createSession();
+		final Session session = Nextweb.createSession();
 
 		System.out.println("Logging in user ...");
 		
@@ -72,7 +72,7 @@ public class TextSync {
 			@Override
 			public void apply(User o) {
 				final AppjangleDataService dataService = new AppjangleDataService(
-						createClient, loginDetails);
+						session, o);
 
 				final FileCache fileCache = new FileCache();
 
