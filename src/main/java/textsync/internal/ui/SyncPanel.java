@@ -44,7 +44,8 @@ public class SyncPanel extends javax.swing.JPanel {
     private static final long serialVersionUID = 1L;
     
     SyncManager syncManager;
-    User registrationInfos;
+    User user;
+    Session session;
     DataServiceFactory dataServiceFactory;
     FileProvider fileProvider;
     LogService logService = new LogService() {
@@ -101,7 +102,7 @@ public class SyncPanel extends javax.swing.JPanel {
      * Creates new form SyncPanel
      */
     public SyncPanel(Session session, User user) {
-        this.registrationInfos = user;
+        this.user = user;
         initComponents();
 
         restoreSelectedDirsFromPrefs();
@@ -459,6 +460,9 @@ public class SyncPanel extends javax.swing.JPanel {
         parent.remove(this);
 
         final Container destPanel = parent;
+        
+        
+        
         AppjangleLogin login = new AppjangleLogin(new AppjangleLogin.WhenLoggedIn() {
 
             public void thenDo(final Session session, final Component p_loginForm, final User user) {
