@@ -219,7 +219,6 @@ public class AppjangleLogin extends javax.swing.JPanel {
         
         loginRq.catchLoginFailures(new DefaultLoginFailureListener());
         
-        System.out.println("HERE");
         loginRq.get(new Closure<User>() {
 			
 			@Override
