@@ -51,6 +51,10 @@ public class TextSync {
 		assert args[4].equals("-op");
 		assert args[6].equals("-root");
 
+		final String file = args[7];
+		final String username = args[1];
+		final String password = args[3];
+		
 		final CountDownLatch latch = new CountDownLatch(2);
 
 		latch.countDown();
@@ -63,7 +67,7 @@ public class TextSync {
 
 		System.out.println("Logging in user ...");
 		
-		LoginResult loginRq = session.login(args[1], args[3]);
+		LoginResult loginRq = session.login(username, password);
 		
 		loginRq.catchLoginFailures(new DefaultLoginHandler(latch, args, exceptions));
 		
