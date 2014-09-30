@@ -4,24 +4,23 @@
  */
 package textsync.internal.appjangle;
 
-import textsync.TextSync;
+import io.nextweb.Session;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.prefs.Preferences;
-import java.util.prefs.PreferencesFactory;
-import javax.swing.JEditorPane;
+
 import javax.swing.JOptionPane;
+
 import one.client.jre.OneJre;
 import one.core.domain.OneClient;
 import one.core.dsl.CoreDsl;
-import one.core.dsl.callbacks.WhenShutdown;
 import one.core.dsl.callbacks.WhenUserLoggedIn;
 import one.core.dsl.callbacks.results.WithChallengedContext;
 import one.core.dsl.callbacks.results.WithUserRegisteredResult;
 import one.core.dsl.grammars.LoginWithSessionIdParameters;
 import one.core.dsl.grammars.LoginWithUserDetailsParameters;
+import textsync.TextSync;
 import textsync.internal.ui.LogginInPanel;
 
 /**
@@ -30,7 +29,8 @@ import textsync.internal.ui.LogginInPanel;
  */
 public class AppjangleLogin extends javax.swing.JPanel {
     
-    private final WhenLoggedIn callback;
+	private static final long serialVersionUID = 1L;
+	private final WhenLoggedIn callback;
     private LogginInPanel lp;
     
     public interface WhenLoggedIn {
@@ -183,9 +183,9 @@ public class AppjangleLogin extends javax.swing.JPanel {
         
         updateUiForLogin();
         
-        final CoreDsl dsl = NextwebGlobal.
+       
         
-        final OneClient c = dsl.createClient();
+        final Session session = Nextweb.createSession();
         
         dsl.loginUser(new LoginWithSessionIdParameters() {
 
