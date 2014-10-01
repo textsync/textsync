@@ -557,7 +557,8 @@ public class SyncPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_monitorFilesCheckboxActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        syncManager.doPrioritySync(fileProvider.getFiles(), new HashSet<Operation>(){{add(Operation.UPLOAD); add(Operation.UPLOADNEW); add(Operation.UPLOADPUBLIC);}}, new SyncManager.SyncEvents() {
+    	logService.note("Starting download downloads operations.");
+    	syncManager.doPrioritySync(fileProvider.getFiles(), new HashSet<Operation>(){{add(Operation.UPLOAD); add(Operation.UPLOADNEW); add(Operation.UPLOADPUBLIC);}}, new SyncManager.SyncEvents() {
 
                     public void synchronizationCompleted() {
                         logService.note("Successfully completed downloads operations.");
