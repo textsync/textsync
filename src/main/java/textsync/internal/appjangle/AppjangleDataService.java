@@ -32,13 +32,14 @@ public class AppjangleDataService implements DataService {
 			final WhenChangesUploaded callback) {
 		Query query = session.link(nodeUri, user.userNode().secret()).reload();
 
-		query.catchExceptions(new ExceptionListener() {
+		final ExceptionListener exceptionListener = new ExceptionListener() {
 
 			@Override
 			public void onFailure(ExceptionResult arg0) {
 				callback.onFailure(arg0.exception());
 			}
-		});
+		};
+		query.catchExceptions(exceptionListener);
 
 		query.get(new Closure<Node>() {
 
@@ -51,7 +52,9 @@ public class AppjangleDataService implements DataService {
 					return;
 				}
 
-				resolvedNode.setValue(newValue).get();
+				Query setValueQuery = resolvedNode.setValue(newValue);
+				
+				setValueQuery.catchExceptions(arg0)
 
 				resolvedNode.clearVersions(3).get();
 
