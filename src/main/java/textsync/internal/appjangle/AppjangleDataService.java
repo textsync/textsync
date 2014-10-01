@@ -9,6 +9,7 @@ import io.nextweb.Node;
 import io.nextweb.Query;
 import io.nextweb.Session;
 import io.nextweb.common.User;
+import io.nextweb.engine.fn.IntegerResult;
 import io.nextweb.promise.exceptions.ExceptionListener;
 import io.nextweb.promise.exceptions.ExceptionResult;
 import one.core.dsl.callbacks.WhenShutdown;
@@ -54,11 +55,29 @@ public class AppjangleDataService implements DataService {
 
 				Query setValueQuery = resolvedNode.setValue(newValue);
 				
-				setValueQuery.catchExceptions(arg0)
+				setValueQuery.catchExceptions(exceptionListener);
 
-				resolvedNode.clearVersions(3).get();
+				setValueQuery.get(new Closure<Node>() {
 
-				callback.thenDo(true);
+					@Override
+					public void apply(Node resolvedNode) {
+						IntegerResult clearVersionsQry = resolvedNode.clearVersions(3);
+
+						clearVersionsQry.catchExceptions(exceptionListener);
+						
+						
+						clearVersionsQry.get(new Closure<Integer>() {
+
+							@Override
+							public void apply(Integer o) {
+								callback.thenDo(true);
+							}
+						});
+						
+					}
+				});
+				
+				
 			}
 		});
 
