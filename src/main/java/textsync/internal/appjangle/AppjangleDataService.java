@@ -4,6 +4,7 @@
  */
 package textsync.internal.appjangle;
 
+import de.mxro.fn.Closure;
 import io.nextweb.Node;
 import io.nextweb.Query;
 import io.nextweb.Session;
@@ -28,8 +29,16 @@ public class AppjangleDataService implements DataService {
     }
 
     public void uploadChanges(final String newValue, String nodeUri, final WhenChangesUploaded callback) {
-    	Node resolvedNode = session.link(nodeUri, user.userNode().secret()).reload().get();
+    	Query query = session.link(nodeUri, user.userNode().secret()).reload();
 
+    	query.catchExceptions(new ExceptionListener() {
+			
+			@Override
+			public void onFailure(ExceptionResult arg0) {
+				callback.onFailure(arg0.exception());
+			}
+		});
+    	
         String oldValue = resolvedNode.value(String.class);
 
         if (oldValue.equals(newValue)) {
@@ -65,14 +74,22 @@ public class AppjangleDataService implements DataService {
 			}
 		});
     	
-    	 String remoteValue = resolvedNode.value(String.class);
+    	query.get(new Closure<Node>() {
+			
+			@Override
+			public void apply(Node resolvedNode) {
+				String remoteValue = resolvedNode.value(String.class);
 
-         if (remoteValue.equals(localValue)) {
-             callback.onUnchanged();
-             return;
-         }
-         
-         callback.onChanged(remoteValue);
+		         if (remoteValue.equals(localValue)) {
+		             callback.onUnchanged();
+		             return;
+		         }
+		         
+		         callback.onChanged(remoteValue);
+			}
+		});
+    	
+    	 
          
        
         
