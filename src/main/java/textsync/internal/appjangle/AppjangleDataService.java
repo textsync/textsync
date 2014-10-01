@@ -5,8 +5,11 @@
 package textsync.internal.appjangle;
 
 import io.nextweb.Node;
+import io.nextweb.Query;
 import io.nextweb.Session;
 import io.nextweb.common.User;
+import io.nextweb.promise.exceptions.ExceptionListener;
+import io.nextweb.promise.exceptions.ExceptionResult;
 import one.core.dsl.callbacks.WhenShutdown;
 import textsync.internal.DataService;
 
@@ -52,7 +55,15 @@ public class AppjangleDataService implements DataService {
 
     public void downloadChanges(final String localValue, String nodeUri, final WhenChangesDownloaded callback) {
       
-    	Node resolvedNode = session.link(nodeUri, user.userNode().secret()).reload().get();
+    	Query query = session.link(nodeUri, user.userNode().secret()).reload();
+    	
+    	query.catchExceptions(new ExceptionListener() {
+			
+			@Override
+			public void onFailure(ExceptionResult arg0) {
+				callback.onFailure(arg0.exception());
+			}
+		});
     	
     	 String remoteValue = resolvedNode.value(String.class);
 
