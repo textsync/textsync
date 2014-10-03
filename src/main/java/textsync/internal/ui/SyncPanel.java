@@ -616,7 +616,7 @@ public class SyncPanel extends javax.swing.JPanel {
            @Override
            public void run() {
                
-               
+               performDownload();
                
            }
        };
