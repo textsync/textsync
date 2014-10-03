@@ -251,10 +251,11 @@ public class SyncPanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         forceSyncButton = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jSyncInBackgroundCheckbox = new javax.swing.JCheckBox();
         uploadButton = new javax.swing.JButton();
         downloadButton = new javax.swing.JButton();
         monitorFilesCheckbox = new javax.swing.JCheckBox();
+        autoDownloadCheckbox = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
         checkFilesButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
@@ -288,10 +289,10 @@ public class SyncPanel extends javax.swing.JPanel {
             }
         });
 
-        jCheckBox1.setText("Synchronize in Background");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        jSyncInBackgroundCheckbox.setText("Synchronize in Background");
+        jSyncInBackgroundCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                jSyncInBackgroundCheckboxActionPerformed(evt);
             }
         });
 
@@ -317,6 +318,8 @@ public class SyncPanel extends javax.swing.JPanel {
             }
         });
 
+        autoDownloadCheckbox.setText("Auto Download");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -324,7 +327,7 @@ public class SyncPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSyncInBackgroundCheckbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(forceSyncButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,6 +337,8 @@ public class SyncPanel extends javax.swing.JPanel {
                         .addComponent(downloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(monitorFilesCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(autoDownloadCheckbox)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -347,8 +352,9 @@ public class SyncPanel extends javax.swing.JPanel {
                     .addComponent(downloadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(monitorFilesCheckbox))
+                    .addComponent(jSyncInBackgroundCheckbox)
+                    .addComponent(monitorFilesCheckbox)
+                    .addComponent(autoDownloadCheckbox))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -435,9 +441,9 @@ public class SyncPanel extends javax.swing.JPanel {
         saveSelectedDirsToPrefs();
     }//GEN-LAST:event_removeButtonActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void jSyncInBackgroundCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSyncInBackgroundCheckboxActionPerformed
 
-        if (jCheckBox1.isSelected()) {
+        if (jSyncInBackgroundCheckbox.isSelected()) {
             syncManager.startPeriodicFullSynchronization();
 
 
@@ -448,7 +454,7 @@ public class SyncPanel extends javax.swing.JPanel {
 
 
 
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_jSyncInBackgroundCheckboxActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Preferences prefs = Preferences.userNodeForPackage(TextSync.class);
@@ -556,12 +562,14 @@ public class SyncPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_monitorFilesCheckboxActionPerformed
 
-    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-    	logService.note("Starting download downloads operations.");
+    private void performDownload() {
+        downloadButton.setEnabled(false);
+        logService.note("Starting download downloads operations.");
     	syncManager.doPrioritySync(fileProvider.getFiles(), new HashSet<Operation>(){{add(Operation.UPLOAD); add(Operation.UPLOADNEW); add(Operation.UPLOADPUBLIC);}}, new SyncManager.SyncEvents() {
 
                     public void synchronizationCompleted() {
                         logService.note("Successfully completed downloads operations.");
+                        downloadButton.setEnabled(true);
                     }
 
                     public void initSynchronization(int maxValue) {
@@ -574,6 +582,7 @@ public class SyncPanel extends javax.swing.JPanel {
 
                     public void onFailure(Throwable t) {
                         logService.note("Unexpected exception while processing files: "+t.getMessage());
+                        downloadButton.setEnabled(true);
                         throw new RuntimeException(t);
                     }
 
@@ -581,21 +590,26 @@ public class SyncPanel extends javax.swing.JPanel {
                         
                     }
                 });
+    }
+    
+    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
+    	performDownload();
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox autoDownloadCheckbox;
     private javax.swing.JButton checkFilesButton;
     private javax.swing.JList directories;
     private javax.swing.JButton downloadButton;
     private javax.swing.JButton forceSyncButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JCheckBox jSyncInBackgroundCheckbox;
     private javax.swing.JTextArea messages;
     private javax.swing.JCheckBox monitorFilesCheckbox;
     private javax.swing.JProgressBar progressBar;

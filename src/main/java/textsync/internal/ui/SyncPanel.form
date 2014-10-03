@@ -152,7 +152,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jCheckBox1" max="32767" attributes="0"/>
+                      <Component id="jSyncInBackgroundCheckbox" max="32767" attributes="0"/>
                       <Component id="forceSyncButton" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -164,6 +164,8 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="monitorFilesCheckbox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="autoDownloadCheckbox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -182,8 +184,9 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jCheckBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jSyncInBackgroundCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="monitorFilesCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="autoDownloadCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
@@ -199,12 +202,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="forceSyncButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+        <Component class="javax.swing.JCheckBox" name="jSyncInBackgroundCheckbox">
           <Properties>
             <Property name="text" type="java.lang.String" value="Synchronize in Background"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jSyncInBackgroundCheckboxActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="uploadButton">
@@ -231,6 +234,11 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="monitorFilesCheckboxActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="autoDownloadCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Auto Download"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
