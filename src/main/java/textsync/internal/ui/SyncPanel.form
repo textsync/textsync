@@ -239,6 +239,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Download"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="autoDownloadCheckboxActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

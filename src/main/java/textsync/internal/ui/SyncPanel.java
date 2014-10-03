@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -319,6 +321,11 @@ public class SyncPanel extends javax.swing.JPanel {
         });
 
         autoDownloadCheckbox.setText("Auto Download");
+        autoDownloadCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoDownloadCheckboxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -595,6 +602,28 @@ public class SyncPanel extends javax.swing.JPanel {
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
     	performDownload();
     }//GEN-LAST:event_downloadButtonActionPerformed
+
+    private Timer downloadTimer = new Timer();
+    
+    private void autoDownloadCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoDownloadCheckboxActionPerformed
+       if (!autoDownloadCheckbox.isSelected()) {
+           downloadTimer.cancel();
+           return;
+       }
+       
+       TimerTask downloadTask = new TimerTask() {
+
+           @Override
+           public void run() {
+               
+               
+               
+           }
+       };
+       
+       downloadTimer.scheduleAtFixedRate(downloadTask, new Date(), 30000);
+       
+    }//GEN-LAST:event_autoDownloadCheckboxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox autoDownloadCheckbox;
