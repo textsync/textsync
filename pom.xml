@@ -6,7 +6,7 @@
 	<groupId>com.appjangle.textsync</groupId>
 	<artifactId>TextSync</artifactId>
 	<version>0.2.1</version>
-	<!-- <packaging>jar</packaging> -->
+	<packaging>jar</packaging>
 
 	<name>TextSync</name>
 	<description>Utility to synchronize and assemble sections of text files.</description>
@@ -14,7 +14,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 	</properties>
 
 	<dependencies>
