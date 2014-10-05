@@ -5,7 +5,7 @@
 
 	<groupId>com.appjangle.textsync</groupId>
 	<artifactId>TextSync</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.1</version>
 	<!-- <packaging>jar</packaging> -->
 
 	<name>TextSync</name>
