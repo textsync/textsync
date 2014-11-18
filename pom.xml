@@ -24,9 +24,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.appjangle.jreinternal</groupId>
-			<artifactId>appjangle-jre-internal</artifactId>
-			<version>[0.0.1,)</version>
+			<groupId>com.appjangle.java</groupId>
+			<artifactId>appjangle-jre</artifactId>
+			<version>0.3.6</version>
 		</dependency>
 
 		<dependency>
