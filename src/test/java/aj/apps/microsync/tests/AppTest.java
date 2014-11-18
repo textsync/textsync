@@ -14,8 +14,7 @@ import textsync.internal.engine.ParseSectionsProcess;
 public class AppTest {
 
 	public void testNothing() {
-		Session session = null;
-		session.link("123").selectAll().get();
+		
 	}
 
 	@Test
